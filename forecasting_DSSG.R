@@ -10,12 +10,14 @@ trainData<-window(elecequip,1996,c(2010,12))
 testData<-window(elecequip,2011,c(2011,11))
 
 #stl
-stlMod <- stl(trainData, t.window=12, s.window="periodic", robust=TRUE)
+stlMod <- stl(trainData,  s.window="periodic", robust=TRUE)
 stlModf <- forecast(stlMod, method="naive",h=11)
 plot(stlMod)
 plot(stlModf, ylab="New orders index")
 lines(testData, col="red")
 legend("topleft",lty=1,bty = "n",col=c("red","blue"),c("testData","STLPred"))
+
+#naive plot
 stlModAdj <- seasadj(stlMod)
 plot(naive(stlModAdj), xlab="New orders index",
      main="Naive forecasts of seasonally adjusted data")
@@ -51,10 +53,10 @@ legend("topleft",lty=1,bty = "n",col=c("red","blue"),c("testData","ARIMAPred"))
 
 #compare accuracy of hotwin vs ARIMA
 plot(testData)
-lines(stlModf$mean, col="green")
+lines(stlModf$mean, col="blue")
 lines(holtWinMod$mean, col="red")
-lines(arimaModF$mean, col="blue")
-legend("bottomleft",lty=1,cex=0.7,y.intersp=0.6,bty = "n",col=c("black","green","red","blue"),c("data","STLPred","holtWinPred","arimaModPred"))
+lines(arimaModF$mean, col="green")
+legend("bottomleft",lty=1,cex=1,y.intersp=0.4,bty = "n",col=c("black","blue","red","green"),c("data","STLPred","holtWinPred","arimaModPred"))
 
 accuracy(stlModf,testData)[2,"RMSE"]
 accuracy(holtWinMod,testData)[2,"RMSE"]
